@@ -6,6 +6,11 @@ Just keeping track of what we're working on and what's changed.
 
 ## Recent Updates
 
+### Manan - Nov 12 - Model loading utilities
+- Added: Checkpoint loading utilities - loads/saves policy.pt files, converts between HF models and state_dicts
+- Added: SAE loader - loads Gemma-SEA sparse autoencoders for all layers
+- Files: `src/models/checkpoint.py`, `src/models/sae_loader.py`
+
 ### Manan - Nov 12 - Initial project + Data setup
 - Added: Project structure with src/ directory (data, evaluation, features, interventions, models)
 - Added: HH dataset loader for Anthropic helpful/harmless data with group labels
