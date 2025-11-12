@@ -4,7 +4,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from typing import Optional, Tuple
 
 
-def load_model_from_checkpoint(state_dict_path: str, model_id: str, base_model_path: str = "google/gemma-2b", device: str = "cuda") -> Optional[Tuple[AutoModelForCausalLM, AutoTokenizer]]:
+def load_model_from_checkpoint(state_dict_path: str, model_id: str, base_model_path: str = "google/gemma-2b", device: str = "cuda", tokenizer: Optional[AutoTokenizer] = None) -> Optional[Tuple[AutoModelForCausalLM, AutoTokenizer]]:
     """
     Loads a state_dict into a new Gemma-2B model instance.
     
@@ -13,6 +13,7 @@ def load_model_from_checkpoint(state_dict_path: str, model_id: str, base_model_p
         model_id: Identifier for the model (e.g., "0%", "25%")
         base_model_path: HuggingFace model identifier
         device: "cuda" or "cpu"
+        tokenizer: Optional pre loaded tokenizer to reuse (loads new one if None)
         
     Returns:
         (model, tokenizer) in eval mode, or None if loading fails
@@ -28,18 +29,21 @@ def load_model_from_checkpoint(state_dict_path: str, model_id: str, base_model_p
         device = "cpu"
     
     try:
-        # 1. Load the base architecture and tokenizer
+        # 1. Load the base architecture
         model = AutoModelForCausalLM.from_pretrained(
-            base_model_path, 
+            base_model_path,
             torch_dtype=torch.bfloat16
         )
-        tokenizer = AutoTokenizer.from_pretrained(base_model_path)
         
-        # 2. Load the fine-tuned weights from the .pt file
+        # 2. Reuse provided tokenizer or load a new one
+        if tokenizer is None:
+            tokenizer = AutoTokenizer.from_pretrained(base_model_path)
+        
+        # 3. Load the fine tuned weights from the .pt file
         state_dict = torch.load(state_dict_path, map_location="cpu")
         model.load_state_dict(state_dict)
         
-        # 3. Move to device and set to eval mode
+        # 4. Move to device and set to eval mode
         model.to(device)
         model.eval()
         print(f"Model '{model_id}' loaded successfully.")
@@ -81,4 +85,3 @@ def get_checkpoint_paths(base_dir: str = "."):
         "75%": os.path.join(base_dir, "checkpoints/75pct_policy.pt"),
         "100%": os.path.join(base_dir, "checkpoints/100pct_policy.pt")
     }
-

@@ -6,6 +6,14 @@ Just keeping track of what we're working on and what's changed.
 
 ## Recent Updates
 
+### Manan - Nov 12 - Added Evaluation
+- Added: evaluation scripts for measuring base model/checkpoint safety/helpfulness 
+- Added: 25 unsafe + 25 benign prompts
+- Added : regex refusal detector
+- Outputs JSON for SAE analysis
+- Files: `src/evaluation/evaluator.py`, `src/evaluation/metrics.py`, `src/evaluation/prompts.py`
+- Edit : `src/models/checkpoint.py`, (Optional) takes a preloaded tokenizer
+
 ### Manan - Nov 12 - Model loading utilities
 - Added: Checkpoint loading utilities - loads/saves policy.pt files, converts between HF models and state_dicts
 - Added: SAE loader - loads Gemma-SEA sparse autoencoders for all layers
