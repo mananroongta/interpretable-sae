@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Training outputs and checkpoints
+src/train/HarmRLVR/checkpoints/
+src/train/HarmRLVR/outputs/
+src/train/HarmRLVR/wandb/
+src/train/HarmRLVR/data/
+logs/
+
+# Hydra outputs
+.hydra/
